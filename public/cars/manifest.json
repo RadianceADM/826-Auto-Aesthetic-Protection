@@ -1,0 +1,178 @@
+[
+  {
+    "slug": "bmw-7-series-side-black",
+    "make": "BMW",
+    "model": "7 Series 740i M Sport (G70)",
+    "year": null,
+    "angle": "side",
+    "facing": "right",
+    "colour": "black",
+    "width": 1800,
+    "height": 594,
+    "files": {
+      "1800": "bmw-7-series-side-black.webp",
+      "1000": "bmw-7-series-side-black-1000.webp",
+      "600": "bmw-7-series-side-black-600.webp"
+    },
+    "licence": "CC BY-SA 4.0",
+    "author": "Damian B Oh",
+    "source": "https://commons.wikimedia.org/wiki/File:BMW_G70_740i_sDrive_M_Sport_Black_Sapphire_Metallic_(167).jpg",
+    "attribution": "\"BMW G70 740i sDrive M Sport Black Sapphire Metallic (167)\" by Damian B Oh, CC BY-SA 4.0, via Wikimedia Commons, background removed",
+    "wheels": [
+      {
+        "name": "front",
+        "cx": 0.84127,
+        "cy": 0.74759,
+        "r": 0.06783,
+        "file": "bmw-7-series-side-black-wheel-front.webp"
+      },
+      {
+        "name": "rear",
+        "cx": 0.21518,
+        "cy": 0.74744,
+        "r": 0.06783,
+        "file": "bmw-7-series-side-black-wheel-rear.webp"
+      }
+    ]
+  },
+  {
+    "slug": "range-rover-side-white",
+    "make": "Land Rover",
+    "model": "Range Rover SV LWB (L460)",
+    "year": null,
+    "angle": "side",
+    "facing": "left",
+    "colour": "white",
+    "width": 1800,
+    "height": 727,
+    "files": {
+      "1800": "range-rover-side-white.webp",
+      "1000": "range-rover-side-white-1000.webp",
+      "600": "range-rover-side-white-600.webp"
+    },
+    "licence": "CC BY-SA 4.0",
+    "author": "Damian B Oh",
+    "source": "https://commons.wikimedia.org/wiki/File:Land_Rover_Range_Rover_P615_SV_LWB_L460_Ostuni_Pearl_White_(10).jpg",
+    "attribution": "\"Land Rover Range Rover P615 SV LWB L460 Ostuni Pearl White (10)\" by Damian B Oh, CC BY-SA 4.0, via Wikimedia Commons, background removed"
+  },
+  {
+    "slug": "land-cruiser-300-side-black",
+    "make": "Toyota",
+    "model": "Land Cruiser 300 VXR",
+    "year": 2025,
+    "angle": "side",
+    "facing": "left",
+    "colour": "black",
+    "width": 1800,
+    "height": 809,
+    "files": {
+      "1800": "land-cruiser-300-side-black.webp",
+      "1000": "land-cruiser-300-side-black-1000.webp",
+      "600": "land-cruiser-300-side-black-600.webp"
+    },
+    "licence": "CC BY-SA 4.0",
+    "author": "Captainmorlypogi1959",
+    "source": "https://commons.wikimedia.org/wiki/File:Toyota_Land_Cruiser_300_4x4_VXR_2025_(8).jpg",
+    "attribution": "\"Toyota Land Cruiser 300 4x4 VXR 2025 (8)\" by Captainmorlypogi1959, CC BY-SA 4.0, via Wikimedia Commons, background removed, wheel chock and window sticker retouched out"
+  },
+  {
+    "slug": "ferrari-roma-side-red",
+    "make": "Ferrari",
+    "model": "Roma",
+    "year": null,
+    "angle": "side",
+    "facing": "left",
+    "colour": "red",
+    "width": 1800,
+    "height": 554,
+    "files": {
+      "1800": "ferrari-roma-side-red.webp",
+      "1000": "ferrari-roma-side-red-1000.webp",
+      "600": "ferrari-roma-side-red-600.webp"
+    },
+    "licence": "CC BY-SA 4.0",
+    "author": "Epensock",
+    "source": "https://commons.wikimedia.org/wiki/File:Award_Winning_Roma_Design_(Rosso_Maranello).jpg",
+    "attribution": "\"Award Winning Roma Design (Rosso Maranello)\" by Epensock, CC BY-SA 4.0, via Wikimedia Commons, background removed, background seen through the glass darkened"
+  },
+  {
+    "slug": "porsche-911-34-white",
+    "make": "Porsche",
+    "model": "911 Carrera S (992)",
+    "year": null,
+    "angle": "front-34",
+    "facing": "right",
+    "colour": "white",
+    "width": 1800,
+    "height": 817,
+    "files": {
+      "1800": "porsche-911-34-white.webp",
+      "1000": "porsche-911-34-white-1000.webp",
+      "600": "porsche-911-34-white-600.webp"
+    },
+    "licence": "CC BY-SA 4.0",
+    "author": "Alexander Migl",
+    "source": "https://commons.wikimedia.org/wiki/File:Porsche_992_Carrera_S_coupe_IMG_5838.jpg",
+    "attribution": "\"Porsche 992 Carrera S coupe IMG 5838\" by Alexander Migl, CC BY-SA 4.0, via Wikimedia Commons, background removed, number plate blanked"
+  },
+  {
+    "slug": "g-class-g63-34-black",
+    "make": "Mercedes-AMG",
+    "model": "G 63 (W463A)",
+    "year": null,
+    "angle": "front-34",
+    "facing": "right",
+    "colour": "black",
+    "width": 1800,
+    "height": 1300,
+    "files": {
+      "1800": "g-class-g63-34-black.webp",
+      "1000": "g-class-g63-34-black-1000.webp",
+      "600": "g-class-g63-34-black-600.webp"
+    },
+    "licence": "CC BY-SA 4.0",
+    "author": "Alexander Migl",
+    "source": "https://commons.wikimedia.org/wiki/File:Mercedes-AMG_G_63_(2018)_IMG_3428.jpg",
+    "attribution": "\"Mercedes-AMG G 63 (2018) IMG 3428\" by Alexander Migl, CC BY-SA 4.0, via Wikimedia Commons, background removed, floor equipment retouched out"
+  },
+  {
+    "slug": "lexus-lx600-34-silver",
+    "make": "Lexus",
+    "model": "LX 600 Luxury",
+    "year": 2026,
+    "angle": "front-34",
+    "facing": "left",
+    "colour": "silver",
+    "width": 1800,
+    "height": 1131,
+    "files": {
+      "1800": "lexus-lx600-34-silver.webp",
+      "1000": "lexus-lx600-34-silver-1000.webp",
+      "600": "lexus-lx600-34-silver-600.webp"
+    },
+    "licence": "CC0",
+    "author": "HJUdall",
+    "source": "https://commons.wikimedia.org/wiki/File:26_Lexus_LX_600_Luxury.jpg",
+    "attribution": "\"26 Lexus LX 600 Luxury\" by HJUdall, CC0, via Wikimedia Commons, background removed, dealer sticker retouched out"
+  },
+  {
+    "slug": "mustang-dark-horse-34-blue",
+    "make": "Ford",
+    "model": "Mustang Dark Horse",
+    "year": 2024,
+    "angle": "front-34",
+    "facing": "left",
+    "colour": "blue",
+    "width": 1800,
+    "height": 965,
+    "files": {
+      "1800": "mustang-dark-horse-34-blue.webp",
+      "1000": "mustang-dark-horse-34-blue-1000.webp",
+      "600": "mustang-dark-horse-34-blue-600.webp"
+    },
+    "licence": "CC0",
+    "author": "HJUdall",
+    "source": "https://commons.wikimedia.org/wiki/File:24_Ford_Mustang_Dark_Horse.jpg",
+    "attribution": "\"24 Ford Mustang Dark Horse\" by HJUdall, CC0, via Wikimedia Commons, background removed, dealer windshield stickers retouched out"
+  }
+]

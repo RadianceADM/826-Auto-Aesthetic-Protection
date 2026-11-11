@@ -1,0 +1,1065 @@
+@import 'tailwindcss';
+
+/* Self-hosted Archivo (no Google Fonts CDN). Text: the upright face, weight
+   axis only (small). Headings: the italic face with its width axis, set wide
+   like the logo's "AUTO AESTHETIC & PROTECTION". Latin first; the latin-ext
+   files (with ₱) load only when a page uses them. */
+@import '@fontsource-variable/archivo/wght.css';
+@import '@fontsource-variable/archivo/wdth-italic.css';
+
+@source '../views/**/*.blade.php';
+
+/* dark: follows the button (data-theme on <html>, set before paint), not only the device */
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+/* The studio: graphite and steel, one accent (826's teal, for actions,
+   picks and focus), gold only as a hairline (never text, never meaning).
+   Dark is the night bay under LED lights; light is the same bay by day,
+   a pale grey cyclorama.
+   Contrast (WCAG 2.x), measured:
+   dark   text 17.1:1 on page, 15.6:1 on panels; muted 7.7:1 / 7.0:1 (6.5:1 on surface-3);
+          accent 10.5:1 / 9.6:1; text on accent 9.1:1; link 10.9:1; field edges 3.7:1; danger 8.9:1
+   light  text 16.2:1 on page; muted 6.8:1 / 7.9:1 on panels (5.6:1 on the bay floor);
+          accent 5.4:1 / 6.3:1; white on accent 6.3:1; link 7.0:1; field edges 3.9:1; danger 6.6:1
+   drive-in (always the night bay): body 11.9:1, labels 10.6:1, muted 7.9:1 */
+:root {
+    --surface: #eceeef;
+    --surface-2: #ffffff;
+    --surface-3: #e0e4e5;
+    --text: #0f1214;
+    --muted: #4b5357;
+    --line: rgb(15 18 20 / 0.12);
+    --field: #7a8286;
+    --accent: #0a6b69;
+    --on-accent: #ffffff;
+    --accent-hover: #085654;
+    --link: #0a6462;
+    --gold: #b89a4e;
+    --danger: #b42318;
+    --scrim: rgb(10 12 14 / 0.5);
+    --steel: #8d969a;
+
+    /* Panels: white with a faint cool fall-off, a crisp top edge */
+    --panel-top: #ffffff;
+    --panel-bottom: #f8f9f9;
+    --panel-edge: rgb(255 255 255 / 1);
+    --panel-shadow: 0 1px 2px rgb(15 18 20 / 0.05), 0 18px 40px -28px rgb(15 18 20 / 0.28);
+
+    /* The bay by day: a pale cyclorama, a satin floor, lit fixtures */
+    --bay-ceiling: #d9dee0;
+    --bay-wall: #e4e8e9;
+    --bay-horizon: #f1f3f3;
+    --bay-floor: #e3e7e8;
+    --bay-floor-near: #d5dadc;
+    --bay-tube: #ffffff;
+    --bay-housing: rgb(70 82 88 / 0.34);
+    --bay-glow: rgb(255 255 255 / 0);
+    --bay-reflect: 0.2;
+    --car-shadow: rgb(22 30 34 / 0.55);
+    --car-shadow-soft: rgb(22 30 34 / 0.18);
+    --sweep: rgb(255 255 255 / 0.4);
+
+    --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+    --nav-h: calc(4rem + var(--demo-bar, 0rem) + env(safe-area-inset-top));
+    color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+    --surface: #0b0c0e;
+    --surface-2: #131518;
+    --surface-3: #1d2024;
+    --text: #eef0f1;
+    --muted: #9ca4a8;
+    --line: rgb(238 240 241 / 0.09);
+    --field: #6b7478;
+    --accent: #2ad3cb;
+    --on-accent: #032120;
+    --accent-hover: #66e4de;
+    --link: #52dfd8;
+    --gold: #cdb57a;
+    --danger: #ff9e92;
+    --scrim: rgb(0 0 0 / 0.66);
+    --steel: #8d969a;
+
+    --panel-top: #16181b;
+    --panel-bottom: #111316;
+    --panel-edge: rgb(255 255 255 / 0.06);
+    --panel-shadow: 0 1px 0 rgb(0 0 0 / 0.6), 0 24px 48px -32px rgb(0 0 0 / 0.9);
+
+    /* The bay at night: black ceiling, LED tubes, a deep gloss floor */
+    --bay-ceiling: #060708;
+    --bay-wall: #0b0d0f;
+    --bay-horizon: #15181b;
+    --bay-floor: #0c0e10;
+    --bay-floor-near: #070809;
+    --bay-tube: #e9f4f4;
+    --bay-housing: transparent;
+    --bay-glow: rgb(205 245 244 / 0.45);
+    --bay-reflect: 0.3;
+    --car-shadow: rgb(0 0 0 / 0.92);
+    --car-shadow-soft: rgb(0 0 0 / 0.55);
+    --sweep: rgb(255 255 255 / 0.3);
+    color-scheme: dark;
+}
+
+@media (min-width: 640px) {
+    :root {
+        --nav-h: calc(4.5rem + var(--demo-bar, 0rem) + env(safe-area-inset-top));
+    }
+}
+
+@theme inline {
+    --color-surface: var(--surface);
+    --color-surface-2: var(--surface-2);
+    --color-surface-3: var(--surface-3);
+    --color-text: var(--text);
+    --color-muted: var(--muted);
+    --color-line: var(--line);
+    --color-field: var(--field);
+    --color-accent: var(--accent);
+    --color-on-accent: var(--on-accent);
+    --color-accent-hover: var(--accent-hover);
+    --color-link: var(--link);
+    --color-gold: var(--gold);
+    --color-danger: var(--danger);
+    --color-scrim: var(--scrim);
+    --color-steel: var(--steel);
+}
+
+@theme {
+    --font-sans: 'Archivo Variable', 'Helvetica Neue', Arial, ui-sans-serif, system-ui, sans-serif;
+
+    /* Two radii: controls 8px, cards 14px (machined, not bubbly) */
+    --radius-control: 0.5rem;
+    --radius-card: 0.875rem;
+
+    --shadow-pop: 0 2px 8px rgb(0 0 0 / 0.08), 0 28px 64px -32px rgb(0 0 0 / 0.5);
+    --shadow-bar: 0 -1px 0 var(--line), 0 -12px 32px -20px rgb(0 0 0 / 0.45);
+}
+
+@layer base {
+    html {
+        /* Room for the scrollbar always, so locking the scroll under a dialog doesn't shift the page */
+        scrollbar-gutter: stable;
+        scroll-padding-top: calc(5.5rem + var(--demo-bar, 0rem) + env(safe-area-inset-top));
+        background-color: var(--surface);
+    }
+
+    body {
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
+        background-color: var(--surface);
+        color: var(--text);
+        font-family: var(--font-sans);
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+    }
+
+    a,
+    button,
+    label,
+    summary {
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    ::selection {
+        background-color: var(--accent);
+        color: var(--on-accent);
+    }
+
+    :focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 3px;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+        color: var(--muted);
+        opacity: 0.75;
+    }
+}
+
+/* ------------------------------------------------------------------ type */
+
+@layer components {
+    /* Headings: wide italic capitals, like the logo's line under the numerals */
+    .font-display {
+        font-family: var(--font-sans);
+        font-style: italic;
+        font-stretch: 118%;
+        font-weight: 780;
+        line-height: 1;
+        letter-spacing: -0.005em;
+        text-transform: uppercase;
+        text-wrap: balance;
+    }
+
+    /* The hero's line: wider still, as wide as the logo's caps */
+    .font-display-wide {
+        font-stretch: 125%;
+        font-weight: 800;
+        line-height: 0.94;
+        letter-spacing: -0.012em;
+    }
+
+    /* Small spaced capitals for labels, set wide and slanted (12px and up) */
+    .eyebrow {
+        font-family: var(--font-sans);
+        font-style: italic;
+        font-stretch: 125%;
+        font-size: 0.75rem;
+        font-weight: 640;
+        line-height: 1.3;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+    }
+
+    .tabular {
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* Prices: upright, heavy, with tabular figures */
+    .price {
+        font-weight: 680;
+        letter-spacing: -0.01em;
+        font-variant-numeric: lining-nums tabular-nums;
+    }
+
+    /* The gold rule under the mark, from the logo */
+    .gold-rule {
+        height: 2px;
+        background: linear-gradient(90deg, var(--gold), color-mix(in srgb, var(--gold) 40%, transparent));
+        border-radius: 1px;
+    }
+
+    .link {
+        color: var(--link);
+        text-decoration: underline;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 0.2em;
+    }
+
+    .link:hover {
+        text-decoration-thickness: 2px;
+    }
+
+    /* A panel: machined, not flat. A faint fall of light from the top edge,
+       a hairline border and a long soft shadow. */
+    .panel {
+        border-radius: var(--radius-card);
+        border: 1px solid var(--line);
+        background: linear-gradient(180deg, var(--panel-top), var(--panel-bottom));
+        box-shadow:
+            inset 0 1px 0 var(--panel-edge),
+            var(--panel-shadow);
+    }
+
+    /* A choice drawn as a card (radio or checkbox): machined like a panel,
+       picked ones get the teal edge and a faint teal wash */
+    .choice {
+        background: linear-gradient(180deg, var(--panel-top), var(--panel-bottom));
+        box-shadow: inset 0 1px 0 var(--panel-edge);
+    }
+
+    .choice.is-checked {
+        background:
+            linear-gradient(180deg, color-mix(in srgb, var(--accent) 9%, transparent), color-mix(in srgb, var(--accent) 3%, transparent)),
+            linear-gradient(180deg, var(--panel-top), var(--panel-bottom));
+    }
+
+    /* The booking summary as a service ticket: a panel with a perforated
+       line and a notch at each end where it would tear */
+    .ticket {
+        position: relative;
+        overflow: hidden;
+        border-radius: var(--radius-card);
+        border: 1px solid var(--line);
+        background: linear-gradient(180deg, var(--panel-top), var(--panel-bottom));
+        box-shadow:
+            inset 0 1px 0 var(--panel-edge),
+            var(--panel-shadow);
+    }
+
+    .ticket .silhouette {
+        --silhouette-cut: var(--panel-top);
+    }
+
+    .ticket-tear {
+        position: relative;
+        height: 1px;
+        margin: 1.25rem 0;
+        background-image: linear-gradient(90deg, color-mix(in srgb, var(--text) 28%, transparent) 55%, transparent 0);
+        background-size: 9px 1px;
+        background-position: 1.4rem 0;
+        background-repeat: repeat-x;
+        background-clip: content-box;
+        padding: 0 1.4rem;
+    }
+
+    .ticket-tear::before,
+    .ticket-tear::after {
+        content: '';
+        position: absolute;
+        top: -0.75rem;
+        width: 1.5rem;
+        height: 1.5rem;
+        border: 1px solid var(--line);
+        border-radius: 50%;
+        background: var(--surface);
+    }
+
+    .ticket-tear::before {
+        left: -0.8rem;
+    }
+
+    .ticket-tear::after {
+        right: -0.8rem;
+    }
+
+    /* A licence-plate chip: the car's plate, set like the real thing */
+    .plate {
+        display: inline-flex;
+        align-items: center;
+        min-height: 1.75rem;
+        padding: 0 0.6rem;
+        border: 1px solid color-mix(in srgb, var(--text) 28%, transparent);
+        border-radius: 0.3rem;
+        font-weight: 700;
+        font-size: 0.8125rem;
+        letter-spacing: 0.12em;
+        font-variant-numeric: tabular-nums;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+}
+
+/* A press: colours ease, a tap gives a little */
+@utility press {
+    transition-property: color, background-color, border-color, opacity, box-shadow, transform;
+    transition-timing-function: var(--ease-out);
+    transition-duration: 160ms;
+
+    @media (hover: none) {
+        &:active {
+            opacity: 0.85;
+        }
+    }
+
+    &:active {
+        transform: translateY(1px);
+    }
+}
+
+@utility no-scrollbar {
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+/* ------------------------------------------------------------- the bay */
+
+/* A studio bay: ceiling, back wall, the line where the floor starts, and a
+   glossy floor that holds a reflection. Every page that shows a car sets
+   it in one of these. --horizon is where the floor begins (0–100%). */
+.bay {
+    --horizon: 58%;
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background:
+        /* the floor: a soft pool of light where the car stands, falling off to the front */
+        radial-gradient(60% 34% at 50% calc(var(--horizon) + 14%), color-mix(in srgb, var(--bay-horizon) 70%, transparent), transparent 70%),
+        linear-gradient(
+            180deg,
+            var(--bay-ceiling) 0%,
+            var(--bay-wall) calc(var(--horizon) - 22%),
+            var(--bay-horizon) calc(var(--horizon) - 1.5%),
+            color-mix(in srgb, var(--bay-horizon) 55%, var(--bay-floor)) calc(var(--horizon) + 1.5%),
+            var(--bay-floor) calc(var(--horizon) + 9%),
+            var(--bay-floor-near) 100%
+        );
+}
+
+/* The wall meets the floor: one fine line of light, not a hard edge */
+.bay::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    left: 0;
+    right: 0;
+    top: var(--horizon);
+    height: 1px;
+    background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--bay-tube) 7%, transparent) 30%, color-mix(in srgb, var(--bay-tube) 7%, transparent) 70%, transparent);
+}
+
+/* The ceiling's LED fixtures (an SVG drawn in perspective) and their
+   blurred reflection on the floor */
+.bay-ceiling {
+    position: absolute;
+    z-index: -1;
+    left: 50%;
+    top: 0;
+    width: max(100%, 64rem);
+    transform: translateX(-50%);
+    height: var(--horizon);
+    pointer-events: none;
+}
+
+.bay-ceiling svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.bay-ceiling-reflection {
+    top: var(--horizon);
+    transform: translateX(-50%) scaleY(-1);
+    opacity: 0.14;
+    filter: blur(2.5px);
+    mask-image: linear-gradient(to top, black, transparent 55%);
+}
+
+:root:not([data-theme='dark']) .bay-ceiling-reflection {
+    opacity: 0.32;
+}
+
+.bay-tube {
+    stroke: var(--bay-tube);
+}
+
+.bay-housing {
+    stroke: var(--bay-housing);
+}
+
+.bay-glow {
+    stroke: var(--bay-glow);
+}
+
+/* Over the headline the lights fall away, so the words stay clear */
+.bay-ceiling[data-fade='left'] svg {
+    mask-image: linear-gradient(180deg, transparent, black 40%);
+}
+
+@media (min-width: 1024px) {
+    .bay-ceiling[data-fade='left'] svg {
+        mask-image: linear-gradient(90deg, transparent 14%, black 40%);
+    }
+}
+
+/* ------------------------------------------------------------ the hero */
+
+/* On phones the floor starts behind the car's lower third, wherever its height puts that */
+.hero {
+    --hero-headroom: 5.25rem;
+    --hero-horizon: calc(var(--hero-headroom) + (100vw - 1.5rem) / var(--car-ar, 2.4) * 0.72);
+}
+
+.hero-car {
+    position: relative;
+    z-index: 1;
+    padding: var(--hero-headroom) 0.75rem 0;
+}
+
+@media (min-width: 640px) {
+    .hero {
+        --hero-headroom: 8rem;
+        --hero-horizon: calc(var(--hero-headroom) + 88vw / var(--car-ar, 2.4) * 0.72);
+    }
+
+    .hero-car {
+        padding: var(--hero-headroom) 6% 0;
+    }
+}
+
+@media (min-width: 1024px) {
+    .hero {
+        --hero-horizon: 63%;
+    }
+
+    .hero .bay-ceiling {
+        left: 71%;
+    }
+
+    .hero-car {
+        position: absolute;
+        right: max(1.5rem, 3vw);
+        bottom: 12%;
+        /* As wide as it can be beside the words, without standing taller than about 55% of the screen */
+        width: min(50%, 56rem, calc(clamp(40rem, 100svh - var(--nav-h), 56rem) * 0.55 * var(--car-ar, 2.4)));
+        padding: 0;
+    }
+}
+
+/* A still band of light on a close-up of paint: gloss, not a gimmick */
+.crop-gloss {
+    position: absolute;
+    z-index: 4;
+    inset: 0;
+    background: linear-gradient(112deg, transparent 38%, rgb(255 255 255 / 0.5) 47%, rgb(255 255 255 / 0.5) 50%, transparent 60%);
+    mix-blend-mode: soft-light;
+    pointer-events: none;
+}
+
+/* ----------------------------------------------------------- the cars */
+
+/* A car parked on the bay's floor: its contact shadow, the car, its
+   reflection in the floor (a flipped copy, fading out), and when asked
+   for, a band of light that crosses the paint now and then. */
+.parked {
+    position: relative;
+}
+
+.parked-body {
+    position: relative;
+}
+
+.parked-img {
+    position: relative;
+    z-index: 1;
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.parked-reflection {
+    position: absolute;
+    left: 0;
+    top: 100%;
+    display: block;
+    width: 100%;
+    height: auto;
+    /* Flipped about the line where the tyres meet the floor, not the image's edge */
+    transform: translateY(calc(var(--contact, 0) * -2%)) scaleY(-1);
+    opacity: var(--bay-reflect);
+    mask-image: linear-gradient(to top, black 0%, transparent 32%);
+    pointer-events: none;
+    user-select: none;
+}
+
+/* The contact shadow: a tight dark line where the tyres sit, a wide soft pool around it */
+.parked-shadow {
+    position: absolute;
+    z-index: 0;
+    left: var(--shadow-inset, 6%);
+    right: var(--shadow-inset, 6%);
+    bottom: calc(var(--contact, 0) * 1% - var(--shadow-h, 12%) / 2);
+    height: var(--shadow-h, 12%);
+    background:
+        radial-gradient(50% 30% at 50% 50%, var(--car-shadow), transparent 100%),
+        radial-gradient(50% 50% at 50% 50%, var(--car-shadow-soft), transparent 100%);
+    pointer-events: none;
+}
+
+/* The sweep: a band of light, clipped to the paint by the car's own shape */
+.parked-sweep {
+    position: absolute;
+    z-index: 2;
+    inset: 0;
+    overflow: hidden;
+    mask-size: 100% 100%;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat;
+    mix-blend-mode: screen;
+    pointer-events: none;
+}
+
+.parked-sweep > span {
+    position: absolute;
+    top: -10%;
+    bottom: -10%;
+    left: 0;
+    width: 22%;
+    background: linear-gradient(100deg, transparent 0%, color-mix(in srgb, var(--sweep) 30%, transparent) 34%, var(--sweep) 47%, var(--sweep) 53%, color-mix(in srgb, var(--sweep) 30%, transparent) 66%, transparent 100%);
+    transform: translateX(-120%) skewX(-14deg);
+}
+
+/* The hero's sweep: once across, then a long rest (paint under a passing light) */
+.sweep-slow > span {
+    animation: sweep 11s var(--ease-out) 1.2s infinite;
+}
+
+@keyframes sweep {
+    0% {
+        transform: translateX(-120%) skewX(-14deg);
+    }
+
+    28%,
+    100% {
+        transform: translateX(560%) skewX(-14deg);
+    }
+}
+
+/* A detail of a car (the bumper, the glass, a panel): the cutout,
+   zoomed and placed inside a frame */
+.crop {
+    position: relative;
+    overflow: hidden;
+}
+
+.crop > img {
+    position: absolute;
+    max-width: none;
+    height: auto;
+}
+
+/* Under a car that stands in a close-up: a tight dark line where the tyres sit */
+.crop-contact {
+    position: absolute;
+    z-index: 1;
+    left: 4%;
+    right: 4%;
+    height: 9%;
+    transform: translateY(-50%);
+    background: radial-gradient(50% 50% at 50% 50%, var(--car-shadow-soft), transparent 100%);
+    pointer-events: none;
+}
+
+.crop > img {
+    z-index: 2;
+}
+
+/* The floor's shadow along the bottom of a close-up: the car sits on something */
+.crop::after {
+    content: '';
+    position: absolute;
+    z-index: 3;
+    inset: auto 0 0;
+    height: 24%;
+    background: linear-gradient(to top, var(--bay-floor-near), color-mix(in srgb, var(--bay-floor-near) 60%, transparent) 35%, transparent);
+    pointer-events: none;
+}
+
+/* The vehicle-size drawings: one colour, the glass and wheel faces in the
+   colour of whatever they sit on */
+.silhouette {
+    --silhouette-cut: var(--surface-2);
+    display: block;
+    overflow: visible;
+}
+
+.silhouette-glass {
+    fill: var(--silhouette-cut);
+    opacity: 0.62;
+}
+
+.silhouette-cut {
+    fill: var(--silhouette-cut);
+    opacity: 0.72;
+}
+
+.silhouette-floor {
+    fill: currentColor;
+    opacity: 0.16;
+}
+
+/* An inner page's header as a bay: a softbox overhead, the car on the floor */
+.page-bay {
+    --horizon: calc(100% - 2.5rem);
+}
+
+.page-bay::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    background: radial-gradient(46% 70% at 74% -12%, color-mix(in srgb, var(--bay-tube) 9%, transparent), transparent 70%);
+    pointer-events: none;
+}
+
+.page-car {
+    position: relative;
+    margin: 0.5rem -1rem 0.75rem;
+}
+
+/* A form page: on phones the header is plain words, the bay starts at lg */
+@media (max-width: 1023px) {
+    .page-bay-wide {
+        background: none;
+    }
+
+    .page-bay-wide::before,
+    .page-bay-wide::after {
+        display: none;
+    }
+}
+
+@media (min-width: 640px) {
+    .page-car {
+        margin: 0 4% 0.75rem 12%;
+    }
+}
+
+@media (min-width: 1024px) {
+    .page-bay {
+        --horizon: 80%;
+    }
+
+    .page-car {
+        position: absolute;
+        right: max(-3rem, -2vw);
+        bottom: 11%;
+        width: min(50%, 42rem);
+        margin: 0;
+    }
+}
+
+/* The layers under a film or a coating */
+.layer-diagram {
+    --paint: #23303a;
+    --paint-light: #34495a;
+}
+
+.layer-face,
+.layer-front,
+.layer-side {
+    stroke: color-mix(in srgb, var(--text) 16%, transparent);
+    stroke-width: 0.75;
+}
+
+.layer-top .layer-face {
+    fill: color-mix(in srgb, var(--accent) 30%, transparent);
+    stroke: var(--accent);
+}
+
+.layer-top .layer-front,
+.layer-top .layer-side {
+    fill: color-mix(in srgb, var(--accent) 45%, transparent);
+    stroke: var(--accent);
+}
+
+.layer-clear .layer-face {
+    fill: color-mix(in srgb, var(--text) 10%, transparent);
+}
+
+.layer-clear .layer-front,
+.layer-clear .layer-side {
+    fill: color-mix(in srgb, var(--text) 16%, transparent);
+}
+
+.layer-colour .layer-face {
+    fill: var(--paint-light);
+}
+
+.layer-colour .layer-front {
+    fill: var(--paint);
+}
+
+.layer-colour .layer-side {
+    fill: #1a242c;
+}
+
+.layer-primer .layer-face {
+    fill: #9aa2a6;
+}
+
+.layer-primer .layer-front,
+.layer-primer .layer-side {
+    fill: #7b8387;
+}
+
+.layer-panel .layer-face {
+    fill: #c3c9cc;
+}
+
+.layer-panel .layer-front {
+    fill: #8d969a;
+}
+
+.layer-panel .layer-side {
+    fill: #6f777b;
+}
+
+.layer-lead {
+    stroke: color-mix(in srgb, var(--text) 35%, transparent);
+    stroke-width: 1;
+}
+
+.layer-label {
+    fill: var(--text);
+    font-size: 15px;
+    font-weight: 650;
+}
+
+.layer-top .layer-label {
+    fill: var(--accent);
+}
+
+.layer-note {
+    fill: var(--muted);
+    font-size: 12.5px;
+}
+
+/* On a phone the drawing is about half size: its words step up to stay readable */
+@media (max-width: 639px) {
+    .layer-label {
+        font-size: 19px;
+    }
+
+    .layer-note {
+        font-size: 16px;
+    }
+}
+
+/* ------------------------------------------------- the drive-in (home) */
+
+/* A tall run of page with the bay pinned inside it: scrolling through it
+   drives the car in. Without JavaScript, before it starts, or for anyone
+   who prefers less motion, it's one composed frame and no pinning. */
+.drive {
+    --drive-run: 230vh;
+    /* Always the night bay: the dark mode's accent and lines, in either mode */
+    --text: #eef0f1;
+    --muted: #9ca4a8;
+    --line: rgb(238 240 241 / 0.09);
+    --accent: #2ad3cb;
+    --on-accent: #032120;
+    --accent-hover: #66e4de;
+    --link: #52dfd8;
+    position: relative;
+    background: #08090b;
+    color: #eef0f1;
+}
+
+@media (min-width: 1024px) {
+    .drive {
+        --drive-run: 320vh;
+    }
+}
+
+.drive[data-mode='scrub'] {
+    height: var(--drive-run, 300vh);
+}
+
+.drive-stage {
+    position: relative;
+    height: calc(100svh - var(--nav-h));
+    min-height: 34rem;
+    max-height: 64rem;
+    overflow: hidden;
+}
+
+.drive[data-mode='scrub'] .drive-stage {
+    position: sticky;
+    top: var(--nav-h);
+    max-height: none;
+}
+
+.drive.is-live .drive-car,
+.drive.is-live .drive-wheel,
+.drive.is-live .drive-sweep > span,
+.drive.is-live [data-beat] {
+    will-change: transform, opacity;
+}
+
+/* The drive-in's bay is always the night bay, in either mode */
+.drive .bay {
+    --bay-ceiling: #050607;
+    --bay-wall: #0a0c0e;
+    --bay-horizon: #16191c;
+    --bay-floor: #0b0d0f;
+    --bay-floor-near: #060708;
+    --bay-tube: #e9f4f4;
+    --bay-housing: transparent;
+    --bay-glow: rgb(205 245 244 / 0.45);
+    --bay-reflect: 0.3;
+    --car-shadow: rgb(0 0 0 / 0.92);
+    --car-shadow-soft: rgb(0 0 0 / 0.55);
+    --sweep: rgb(255 255 255 / 0.27);
+}
+
+/* A soft wash on the back wall behind the car's spot, so dark paint stands off the dark bay */
+.drive-stage::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    background:
+        radial-gradient(34% 26% at 50% calc(var(--horizon) - 9%), rgb(190 205 210 / 0.11), transparent 72%),
+        radial-gradient(60% 16% at 50% calc(var(--horizon) + 4%), rgb(190 205 210 / 0.07), transparent 75%);
+    pointer-events: none;
+}
+
+.drive .bay-ceiling-reflection {
+    opacity: 0.07;
+    filter: blur(4px);
+}
+
+@media (max-width: 639px) {
+    .drive .bay-ceiling {
+        width: 100%;
+    }
+}
+
+/* Where things sit in the pinned bay: the lights over it, the car on the
+   floor line, the services under it, then the words and the way to book */
+.drive-stage {
+    --horizon: 47%;
+    --drive-lead: 1.5rem;
+}
+
+.drive .bay-ceiling:not(.bay-ceiling-reflection) {
+    height: 30%;
+}
+
+.drive-park {
+    bottom: calc(100% - var(--horizon) - 1.2%);
+}
+
+.drive-car {
+    width: min(calc(100vw - 1.25rem), 40rem, calc((100svh - var(--nav-h)) * 0.62));
+}
+
+.drive-list {
+    top: calc(var(--horizon) + 3.25rem);
+}
+
+.drive-copy {
+    top: calc(var(--horizon) + 11.5rem);
+}
+
+@media (max-height: 720px) {
+    .drive-end-body {
+        display: none;
+    }
+}
+
+@media (min-width: 640px) {
+    .drive-car {
+        width: min(84vw, 44rem, calc((100svh - var(--nav-h)) * 0.9));
+    }
+
+    .drive-copy {
+        top: calc(var(--horizon) + 10rem);
+    }
+}
+
+@media (min-width: 1024px) {
+    .drive-stage {
+        --horizon: 56%;
+        --drive-lead: 2.5rem;
+    }
+
+    .drive .bay-ceiling:not(.bay-ceiling-reflection) {
+        height: 36%;
+    }
+
+    .drive-car {
+        width: min(62vw, calc((100svh - var(--nav-h)) * 1.02), 64rem);
+    }
+
+    .drive-copy {
+        top: calc(var(--horizon) + var(--drive-lead) + 5.25rem);
+    }
+}
+
+.drive [data-faded],
+.drive [data-faded] * {
+    pointer-events: none !important;
+}
+
+/* The car again, upside down under itself: the floor's reflection */
+.drive-reflection {
+    position: absolute;
+    left: 0;
+    top: 100%;
+    width: 100%;
+    transform: translateY(calc(var(--contact, 0) * -2%)) scaleY(-1);
+    opacity: var(--bay-reflect);
+    mask-image: linear-gradient(to top, black 0%, transparent 34%);
+    pointer-events: none;
+}
+
+/* The nearest light rail fades in from the top, not a hard line under the bar */
+.drive .bay-ceiling svg {
+    mask-image: linear-gradient(180deg, transparent 6%, black 34%);
+}
+
+.drive-wheel {
+    position: absolute;
+    z-index: 2;
+    display: block;
+    height: auto;
+    transform-origin: 50% 50%;
+}
+
+/* ---------------------------------------------------------------- motion */
+
+/* Dialogs open with a short fade and lift */
+.modal-in {
+    animation: modal-in 0.2s var(--ease-out) both;
+}
+
+@keyframes modal-in {
+    from {
+        opacity: 0;
+        transform: translateY(0.75rem);
+    }
+}
+
+.fade-in {
+    animation: fade-in 0.16s ease both;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+}
+
+/* Switching light and dark: every colour at once (no element fades on its own) */
+.theme-switching,
+.theme-switching * {
+    transition: none !important;
+}
+
+/* Google's sign-in button, as its branding asks: white, a grey hairline,
+   near-black text and the four-colour G, in light and dark mode alike.
+   These are Google's colours, not the theme's; nothing else uses them. */
+.google-button {
+    --google-fill: #ffffff;
+    --google-edge: #747775;
+    --google-text: #1f1f1f;
+    display: inline-flex;
+    min-height: 3rem;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 0 1.25rem;
+    border: 1px solid var(--google-edge);
+    border-radius: var(--radius-control);
+    background-color: var(--google-fill);
+    color: var(--google-text);
+    font-family: Roboto, Arial, ui-sans-serif, system-ui, sans-serif;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    letter-spacing: 0.0156em;
+    white-space: nowrap;
+}
+
+.google-button:hover {
+    box-shadow:
+        0 1px 2px 0 rgb(60 64 67 / 0.3),
+        0 1px 3px 1px rgb(60 64 67 / 0.15);
+}
+
+/* Visitors who prefer less motion: everything holds still */
+@media (prefers-reduced-motion: reduce) {
+    .modal-in,
+    .fade-in,
+    .sweep-slow > span {
+        animation: none !important;
+    }
+
+    *,
+    *::before,
+    *::after {
+        transition-duration: 0.01ms !important;
+    }
+
+    .press:active {
+        transform: none;
+    }
+}

@@ -1,0 +1,50 @@
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    RewriteEngine On
+
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Handle X-XSRF-Token Header
+    RewriteCond %{HTTP:x-xsrf-token} .
+    RewriteRule .* - [E=HTTP_X_XSRF_TOKEN:%{HTTP:X-XSRF-Token}]
+
+    # www.dran.dev → dran.dev, the canonical address
+    RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+    RewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]
+
+    # Caching (RadianceADM/blueprints PERFORMANCE_BLUEPRINT.md §3), files on disk only, so
+    # Laravel's own responses keep the Cache-Control they set. Pictures, icons and the
+    # manifest: a week, since a new one can keep the old name. The build's files: a year,
+    # since each has its contents' hash in its name.
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule \.(avif|webp|jpe?g|png|gif|svg|ico|webmanifest|mp4|webm|mp3)$ - [E=CACHE_WEEK:1]
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule ^build/assets/ - [E=CACHE_YEAR:1]
+
+    # Redirect Trailing Slashes If Not A Folder...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+
+    # Send Requests To Front Controller...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+</IfModule>
+
+# Browsers expect the web app manifest as JSON
+<IfModule mod_mime.c>
+    AddType application/manifest+json .webmanifest
+</IfModule>
+
+# Plain Header lines with env=, not a FilesMatch section: on LiteSpeed one here would
+# beat a subfolder's own rules (blueprint §3)
+<IfModule mod_headers.c>
+    Header set Cache-Control "public, max-age=604800" env=CACHE_WEEK
+    Header set Cache-Control "public, max-age=31536000, immutable" env=CACHE_YEAR
+</IfModule>

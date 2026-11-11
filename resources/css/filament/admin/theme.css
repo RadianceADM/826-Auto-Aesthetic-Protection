@@ -1,0 +1,47 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+/* Self-hosted (no Google Fonts CDN): Archivo for the interface */
+@import '@fontsource-variable/archivo/wght.css';
+
+@source '../../../../app/Filament/**/*';
+@source '../../../../resources/views/filament/**/*';
+
+/* The brand: the logo (once it arrives) beside the name */
+.app-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    height: 100%;
+    color: #121315;
+}
+
+.app-brand-logo {
+    height: 100%;
+    width: auto;
+}
+
+.app-brand-name {
+    font-weight: 700;
+    font-size: 1.05rem;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+}
+
+.app-brand-rest {
+    font-weight: 500;
+    color: #4c515a;
+}
+
+.dark .app-brand {
+    color: #f6f6f7;
+}
+
+.dark .app-brand-rest {
+    color: #b0b4bb;
+}
+
+@media (max-width: 30rem) {
+    .app-brand-rest {
+        display: none;
+    }
+}
