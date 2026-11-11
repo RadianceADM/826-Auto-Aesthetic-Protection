@@ -599,7 +599,8 @@
     overflow: hidden;
 }
 
-.crop > img {
+.crop > img,
+.crop > picture > img {
     position: absolute;
     max-width: none;
     height: auto;
@@ -617,7 +618,8 @@
     pointer-events: none;
 }
 
-.crop > img {
+.crop > img,
+.crop > picture > img {
     z-index: 2;
 }
 
@@ -628,7 +630,8 @@
     z-index: 2;
 }
 
-.crop-detail > img {
+.crop-detail > img,
+.crop-detail > picture > img {
     position: absolute;
     max-width: none;
 }
@@ -857,6 +860,12 @@
     position: sticky;
     top: var(--nav-h);
     max-height: none;
+}
+
+/* The drive-in's light is clipped to the BMW's shape, fetched only once the bay is in view */
+.drive.is-live .drive-sweep {
+    mask-image: var(--sweep-mask);
+    -webkit-mask-image: var(--sweep-mask);
 }
 
 .drive.is-live .drive-car,

@@ -40,6 +40,8 @@
 # Browsers expect the web app manifest as JSON
 <IfModule mod_mime.c>
     AddType application/manifest+json .webmanifest
+    # The car photos and logo come as AVIF first (older servers don't know the type)
+    AddType image/avif .avif
 </IfModule>
 
 # Plain Header lines with env=, not a FilesMatch section: on LiteSpeed one here would

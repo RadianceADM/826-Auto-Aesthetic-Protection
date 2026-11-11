@@ -1,6 +1,6 @@
 import { type CSSProperties, type ReactNode, useEffect, useRef, useState } from 'react';
 
-import { type Car, carAlt, carFile, carSrcSet, contactOf, type Detail, type Facing } from '../lib/cars';
+import { avifOf, type Car, carAlt, carAvifSrcSet, carFile, carSrcSet, contactOf, type Detail, type Facing } from '../lib/cars';
 import VehicleSilhouette from './VehicleSilhouette';
 
 /* ------------------------------------------------------------- lights */
@@ -228,14 +228,15 @@ export function ParkedCar({ car, face, sizes, eager = false, sweep = false, refl
         ...(shadow?.height ? { '--shadow-h': shadow.height } : {}),
     } as CSSProperties;
 
-    // The sweep is clipped by the car's own shape: the file the browser picked, once it's in
+    // The file the browser picked, once it's in: the reflection and the sweep's mask reuse it, so the
+    // car is fetched once
     useEffect(() => {
         const element = image.current;
 
-        if (sweep && element?.complete && element.naturalWidth) {
+        if (element?.complete && element.naturalWidth) {
             setLoaded(element.currentSrc);
         }
-    }, [sweep, car]);
+    }, [car]);
 
     if (!car) {
         return (
@@ -259,15 +260,18 @@ export function ParkedCar({ car, face, sizes, eager = false, sweep = false, refl
         <div className={`parked ${className}`} style={vars}>
             <div aria-hidden="true" className="parked-shadow" />
             <div className="parked-body" style={mirrored ? { transform: 'scaleX(-1)' } : undefined}>
-                <img
-                    ref={image}
-                    {...shared}
-                    alt={alt ?? carAlt(car)}
-                    fetchPriority={eager ? 'high' : undefined}
-                    onLoad={(event) => sweep && setLoaded(event.currentTarget.currentSrc)}
-                    className="parked-img"
-                />
-                {reflection && <img {...shared} alt="" aria-hidden="true" className="parked-reflection" />}
+                <picture className="contents">
+                    <source type="image/avif" srcSet={carAvifSrcSet(car)} sizes={sizes} />
+                    <img
+                        ref={image}
+                        {...shared}
+                        alt={alt ?? carAlt(car)}
+                        fetchPriority={eager ? 'high' : undefined}
+                        onLoad={(event) => setLoaded(event.currentTarget.currentSrc)}
+                        className="parked-img"
+                    />
+                </picture>
+                {reflection && loaded && <img src={loaded} width={car.width} height={car.height} decoding="async" alt="" aria-hidden="true" className="parked-reflection" />}
                 {sweep && loaded && (
                     <div aria-hidden="true" className="parked-sweep sweep-slow" style={{ maskImage: `url("${loaded}")`, WebkitMaskImage: `url("${loaded}")` }}>
                         <span />
@@ -329,6 +333,12 @@ export function CarCrop({ car, focus, aspect, face, frame, alt, eager = false, d
             {detail ? (
                 // The car's box, placed as the whole file would be, holding only the sharp crop of the part shown
                 <div className="crop-detail" style={{ ...placed, aspectRatio: ratio }}>
+                    <picture className="contents">
+                    <source
+                        type="image/avif"
+                        srcSet={`${carFile(avifOf(detail.files[1000]))} 1000w, ${carFile(avifOf(detail.files.full))} ${detail.width}w`}
+                        sizes={`(min-width: ${frame.breakpoint ?? 1024}px) ${scale(frame.wide, detail.w)}, ${scale(frame.narrow, detail.w)}`}
+                    />
                     <img
                         src={carFile(detail.files[1000])}
                         srcSet={`${carFile(detail.files[1000])} 1000w, ${carFile(detail.files.full)} ${detail.width}w`}
@@ -341,8 +351,11 @@ export function CarCrop({ car, focus, aspect, face, frame, alt, eager = false, d
                         decoding="async"
                         style={{ left: `${detail.x * 100}%`, top: `${detail.y * 100}%`, width: `${detail.w * 100}%`, height: `${detail.h * 100}%` }}
                     />
+                    </picture>
                 </div>
             ) : (
+                <picture className="contents">
+                <source type="image/avif" srcSet={carAvifSrcSet(car)} sizes={`(min-width: ${frame.breakpoint ?? 1024}px) ${scale(frame.wide)}, ${scale(frame.narrow)}`} />
                 <img
                     src={carFile(car.files[1000])}
                     srcSet={carSrcSet(car)}
@@ -355,6 +368,7 @@ export function CarCrop({ car, focus, aspect, face, frame, alt, eager = false, d
                     decoding="async"
                     style={placed}
                 />
+                </picture>
             )}
             {/* Standing on the floor: the dark line where the tyres touch it */}
             {focus.floor !== undefined && <span aria-hidden="true" className="crop-contact" style={{ top: `${focus.floor * 100}%` }} />}

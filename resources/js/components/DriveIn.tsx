@@ -1,7 +1,7 @@
 import { type CSSProperties, type FocusEvent, useLayoutEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { type Car, carAlt, carFile, carSrcSet, contactOf, type Facing } from '../lib/cars';
+import { avifOf, type Car, carAlt, carAvifSrcSet, carFile, carSrcSet, contactOf, type Facing } from '../lib/cars';
 import { copy } from '../lib/copy';
 import { categories } from '../lib/site';
 import Button from './Button';
@@ -223,6 +223,7 @@ export default function DriveIn({ car, face = 'right', spots }: Props) {
         }
     };
 
+    const [picked, setPicked] = useState<string | null>(null);
     const ordered = spots.map((spot, index) => ({ ...spot, category: categories.find((category) => category.slug === spot.slug), from: 0.5 + index * 0.075 })).filter((spot) => spot.category);
 
     // Wide screens: the names go in even columns from 10% before the car to 10% past it, left to right
@@ -291,20 +292,30 @@ export default function DriveIn({ car, face = 'right', spots }: Props) {
                                     {[false, true].map((reflected) => (
                                         <div key={String(reflected)} aria-hidden={reflected || undefined} className={reflected ? 'drive-reflection' : 'relative'}>
                                             <div data-body className="relative origin-[18%_92%]">
-                                                <img {...shared} alt={reflected ? '' : carAlt(car)} className="parked-img" />
+                                                {reflected ? (
+                                                    // The floor's copy reuses the file the car itself picked, so it's fetched once
+                                                    picked && <img src={picked} width={car.width} height={car.height} decoding="async" alt="" className="parked-img" />
+                                                ) : (
+                                                    <picture className="contents">
+                                                        <source type="image/avif" srcSet={carAvifSrcSet(car)} sizes={shared.sizes} />
+                                                        <img {...shared} alt={carAlt(car)} onLoad={(event) => setPicked(event.currentTarget.currentSrc)} className="parked-img" />
+                                                    </picture>
+                                                )}
                                                 {!reflected && (
+                                                    // The mask (the car's shape for the light) only loads once the bay is on screen
                                                     <div
                                                         aria-hidden="true"
                                                         className="drive-sweep parked-sweep"
-                                                        style={{ maskImage: `url("${carFile(car.files[1000])}")`, WebkitMaskImage: `url("${carFile(car.files[1000])}")` }}
+                                                        style={{ '--sweep-mask': `url("${carFile(car.files[600])}")` } as CSSProperties}
                                                     >
                                                         <span data-sweep />
                                                     </div>
                                                 )}
                                             </div>
                                             {wheels.map((wheel) => (
+                                                <picture key={wheel.name} className="contents">
+                                                <source type="image/avif" srcSet={carFile(avifOf(wheel.file))} />
                                                 <img
-                                                    key={wheel.name}
                                                     data-wheel={reflected ? 'flipped' : ''}
                                                     data-r={wheel.r}
                                                     src={carFile(wheel.file)}
@@ -315,6 +326,7 @@ export default function DriveIn({ car, face = 'right', spots }: Props) {
                                                     className="drive-wheel"
                                                     style={{ left: `${(wheel.cx - wheel.r) * 100}%`, top: `${(wheel.cy - (wheel.r * car.width) / car.height) * 100}%`, width: `${wheel.r * 200}%` }}
                                                 />
+                                                </picture>
                                             ))}
                                         </div>
                                     ))}

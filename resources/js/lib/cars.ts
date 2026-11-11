@@ -224,6 +224,19 @@ export function carFile(file: string): string {
     return `${site.base}/cars/${file.replace(/^\/?(cars\/)?/, '')}`;
 }
 
+/**
+ * Every car file has an AVIF twin next to it (about half the bytes for the
+ * same look); browsers that can't show AVIF take the WebP.
+ */
+export const avifOf = (file: string): string => file.replace(/\.webp$/, '.avif');
+
+/** The AVIF set, with a 1400 step the WebP set doesn't have (phones at 3x land on it) */
+export const carAvifSrcSet = (car: Car): string => {
+    const base = car.files[1800].replace(/\.webp$/, '');
+
+    return [`${base}-600`, `${base}-1000`, `${base}-1400`, base].map((name, index) => `${carFile(`${name}.avif`)} ${[600, 1000, 1400, 1800][index]}w`).join(', ');
+};
+
 export const carSrcSet = (car: Car): string => `${carFile(car.files[600])} 600w, ${carFile(car.files[1000])} 1000w, ${carFile(car.files[1800])} 1800w`;
 
 const ANGLES: Record<CarAngle, string> = {

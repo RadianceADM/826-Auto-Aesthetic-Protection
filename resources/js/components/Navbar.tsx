@@ -100,7 +100,7 @@ export default function Navbar() {
             )}
             <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:h-[4.5rem] sm:px-8 xl:px-12" aria-label={copy.nav.main}>
                 <Link to="/" aria-label={copy.nav.homeLabel(site.name)} className="press -my-1 -ml-1 flex items-center rounded-control p-1">
-                    <Mark className="h-7 w-auto sm:h-8" />
+                    <Mark className="h-7 w-auto sm:h-8" sizes="115px" eager />
                 </Link>
 
                 <div className="flex items-center gap-0.5 sm:gap-1">
