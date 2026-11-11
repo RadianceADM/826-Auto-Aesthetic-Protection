@@ -277,12 +277,28 @@ export const driveSpots = [
     { slug: 'paint-protection-film', x: 0.915, y: 0.4 },
 ];
 
-export type Shot = { car?: Car; focus: { x: number; y: number; zoom: number; floor?: number }; face?: Facing; alt?: string; gloss?: boolean };
+/**
+ * A sharper file for a close-up: the part of the full-resolution cutout a
+ * frame can show (x, y, w, h as fractions of the car), so zooming in never
+ * stretches the whole-car file.
+ */
+export type Detail = { files: { full: string; 1000: string }; width: number; x: number; y: number; w: number; h: number };
 
-const shot = (slug: string, focus: Shot['focus'], view: string, extra: Partial<Shot> = {}): Shot => {
+export type Shot = { car?: Car; focus: { x: number; y: number; zoom: number; floor?: number }; face?: Facing; alt?: string; gloss?: boolean; detail?: Detail };
+
+/** The close-up crops in public/cars (cut by the scratchpad's bgtool/details.mjs from the full-size cutouts) */
+const DETAILS: Record<string, Detail> = {
+    'bmw-7-series-side-black:coating': { files: { full: 'bmw-7-series-side-black-detail-coating.webp', 1000: 'bmw-7-series-side-black-detail-coating-1000.webp' }, width: 1984, x: 0.0219, y: 0, w: 0.55619, h: 1 },
+    'mustang-dark-horse-34-blue:ppf': { files: { full: 'mustang-dark-horse-34-blue-detail-ppf.webp', 1000: 'mustang-dark-horse-34-blue-detail-ppf-1000.webp' }, width: 2000, x: 0, y: 0, w: 0.76966, h: 1 },
+    'land-cruiser-300-side-black:tint': { files: { full: 'land-cruiser-300-side-black-detail-tint.webp', 1000: 'land-cruiser-300-side-black-detail-tint-1000.webp' }, width: 1871, x: 0.33167, y: 0, w: 0.49667, h: 0.87305 },
+    'porsche-911-34-white:windshield': { files: { full: 'porsche-911-34-white-detail-windshield.webp', 1000: 'porsche-911-34-white-detail-windshield-1000.webp' }, width: 2000, x: 0.1919, y: 0, w: 0.55619, h: 0.96304 },
+    'land-cruiser-300-side-black:interior': { files: { full: 'land-cruiser-300-side-black-detail-interior.webp', 1000: 'land-cruiser-300-side-black-detail-interior-1000.webp' }, width: 1647, x: 0.42143, y: 0, w: 0.43714, h: 0.77375 },
+};
+
+const shot = (slug: string, focus: Shot['focus'], view: string, extra: Partial<Shot> = {}, detail?: string): Shot => {
     const picked = car(slug);
 
-    return { car: picked, focus, alt: picked ? carAlt(picked, view) : undefined, ...extra };
+    return { car: picked, focus, alt: picked ? carAlt(picked, view) : undefined, detail: detail ? DETAILS[`${slug}:${detail}`] : undefined, ...extra };
 };
 
 /**
@@ -291,19 +307,19 @@ const shot = (slug: string, focus: Shot['focus'], view: string, extra: Partial<S
  * the whole car for detailing.
  */
 const SHOTS: Record<string, Shot> = {
-    'paint-protection-film': shot('mustang-dark-horse-34-blue', { x: 0.32, y: 0.55, zoom: 1.45 }, 'close-up of the front bumper, hood and headlights'),
-    coating: shot('ferrari-roma-side-red', { x: 0.66, y: 0.5, zoom: 2.3, floor: 0.93 }, 'close-up of the paint over the rear wheel', { gloss: true }),
-    'window-tint': shot('land-cruiser-300-side-black', { x: 0.58, y: 0.3, zoom: 2.4 }, 'close-up of the side windows'),
+    'paint-protection-film': shot('mustang-dark-horse-34-blue', { x: 0.32, y: 0.55, zoom: 1.45 }, 'close-up of the front bumper, hood and headlights', {}, 'ppf'),
+    coating: shot('bmw-7-series-side-black', { x: 0.3, y: 0.52, zoom: 2.1 }, 'close-up of the gloss on the rear door and wheel', { gloss: true }, 'coating'),
+    'window-tint': shot('land-cruiser-300-side-black', { x: 0.58, y: 0.3, zoom: 2.4 }, 'close-up of the side windows', {}, 'tint'),
     detailing: shot('lexus-lx600-34-silver', { x: 0.5, y: 0.5, zoom: 0.8, floor: 0.92 }, 'front three-quarter view'),
 };
 
 /** Services that show a different part than the rest of their kind (the whole car for full-body film, the cabin for interior work) */
 const SERVICE_SHOTS: Record<string, Shot> = {
     'full-body-ppf': shot('porsche-911-34-white', { x: 0.5, y: 0.5, zoom: 0.9, floor: 0.86 }, 'front three-quarter view'),
-    'windshield-ppf': shot('porsche-911-34-white', { x: 0.47, y: 0.24, zoom: 2.1 }, 'close-up of the windshield'),
+    'windshield-ppf': shot('porsche-911-34-white', { x: 0.47, y: 0.24, zoom: 2.1 }, 'close-up of the windshield', {}, 'windshield'),
     'exterior-detailing': shot('g-class-g63-34-black', { x: 0.5, y: 0.5, zoom: 0.62, floor: 0.92 }, 'front three-quarter view'),
-    'interior-detailing': shot('land-cruiser-300-side-black', { x: 0.62, y: 0.3, zoom: 2.8 }, 'close-up of the seats through the side windows'),
-    'interior-leather-coating': shot('land-cruiser-300-side-black', { x: 0.66, y: 0.31, zoom: 3.2 }, 'close-up of the seats through the side windows'),
+    'interior-detailing': shot('land-cruiser-300-side-black', { x: 0.64, y: 0.305, zoom: 2.8 }, 'close-up of the seats through the side windows', {}, 'interior'),
+    'interior-leather-coating': shot('land-cruiser-300-side-black', { x: 0.66, y: 0.31, zoom: 3.2 }, 'close-up of the seats through the side windows', {}, 'interior'),
 };
 
 export const shotFor = (category: string, service?: string): Shot => (service && SERVICE_SHOTS[service]) || SHOTS[category] || SHOTS.detailing;

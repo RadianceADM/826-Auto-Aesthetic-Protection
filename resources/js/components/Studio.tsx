@@ -1,6 +1,6 @@
 import { type CSSProperties, type ReactNode, useEffect, useRef, useState } from 'react';
 
-import { type Car, carAlt, carFile, carSrcSet, contactOf, type Facing } from '../lib/cars';
+import { type Car, carAlt, carFile, carSrcSet, contactOf, type Detail, type Facing } from '../lib/cars';
 import VehicleSilhouette from './VehicleSilhouette';
 
 /* ------------------------------------------------------------- lights */
@@ -293,6 +293,8 @@ type CropProps = {
     frame: { wide: string; narrow: string; breakpoint?: number };
     alt?: string;
     eager?: boolean;
+    /** A sharper crop of the part shown, when there is one */
+    detail?: Detail;
     className?: string;
     children?: ReactNode;
 };
@@ -301,7 +303,7 @@ type CropProps = {
  * A close-up from a cutout (the bumper for film, the glass for tint, a
  * panel for coating): the whole file, zoomed and placed in a frame.
  */
-export function CarCrop({ car, focus, aspect, face, frame, alt, eager = false, className = '', children }: CropProps) {
+export function CarCrop({ car, focus, aspect, face, frame, alt, eager = false, detail, className = '', children }: CropProps) {
     if (!car) {
         return (
             <div className={`crop grid place-items-center text-steel/40 ${className}`} style={{ aspectRatio: aspect }}>
@@ -317,22 +319,43 @@ export function CarCrop({ car, focus, aspect, face, frame, alt, eager = false, c
     const left = 50 - x * focus.zoom * 100;
     const shownHeight = focus.zoom * (aspect / ratio) * 100;
     const top = focus.floor !== undefined ? focus.floor * 100 - shownHeight * (1 - contactOf(car) / 100) : 50 - focus.y * shownHeight;
-    const scale = (value: string) => value.replace(/(\d+(?:\.\d+)?)vw/, (_, number: string) => `${Math.round(Number(number) * focus.zoom)}vw`);
+    const scale = (value: string, share = 1) => value.replace(/(\d+(?:\.\d+)?)vw/, (_, number: string) => `${Math.round(Number(number) * focus.zoom * share)}vw`);
+
+    const placed = { width: `${focus.zoom * 100}%`, left: `${left}%`, top: `${top}%`, transform: mirrored ? 'scaleX(-1)' : undefined };
+    const loading = eager ? ('eager' as const) : ('lazy' as const);
 
     return (
         <div className={`crop ${className}`} style={{ aspectRatio: aspect }}>
-            <img
-                src={carFile(car.files[1000])}
-                srcSet={carSrcSet(car)}
-                sizes={`(min-width: ${frame.breakpoint ?? 1024}px) ${scale(frame.wide)}, ${scale(frame.narrow)}`}
-                width={car.width}
-                height={car.height}
-                alt={alt ?? carAlt(car)}
-                loading={eager ? 'eager' : 'lazy'}
-                fetchPriority={eager ? 'high' : undefined}
-                decoding="async"
-                style={{ width: `${focus.zoom * 100}%`, left: `${left}%`, top: `${top}%`, transform: mirrored ? 'scaleX(-1)' : undefined }}
-            />
+            {detail ? (
+                // The car's box, placed as the whole file would be, holding only the sharp crop of the part shown
+                <div className="crop-detail" style={{ ...placed, aspectRatio: ratio }}>
+                    <img
+                        src={carFile(detail.files[1000])}
+                        srcSet={`${carFile(detail.files[1000])} 1000w, ${carFile(detail.files.full)} ${detail.width}w`}
+                        sizes={`(min-width: ${frame.breakpoint ?? 1024}px) ${scale(frame.wide, detail.w)}, ${scale(frame.narrow, detail.w)}`}
+                        width={detail.width}
+                        height={Math.round((detail.width * detail.h) / (detail.w * ratio))}
+                        alt={alt ?? carAlt(car)}
+                        loading={loading}
+                        fetchPriority={eager ? 'high' : undefined}
+                        decoding="async"
+                        style={{ left: `${detail.x * 100}%`, top: `${detail.y * 100}%`, width: `${detail.w * 100}%`, height: `${detail.h * 100}%` }}
+                    />
+                </div>
+            ) : (
+                <img
+                    src={carFile(car.files[1000])}
+                    srcSet={carSrcSet(car)}
+                    sizes={`(min-width: ${frame.breakpoint ?? 1024}px) ${scale(frame.wide)}, ${scale(frame.narrow)}`}
+                    width={car.width}
+                    height={car.height}
+                    alt={alt ?? carAlt(car)}
+                    loading={loading}
+                    fetchPriority={eager ? 'high' : undefined}
+                    decoding="async"
+                    style={placed}
+                />
+            )}
             {/* Standing on the floor: the dark line where the tyres touch it */}
             {focus.floor !== undefined && <span aria-hidden="true" className="crop-contact" style={{ top: `${focus.floor * 100}%` }} />}
             {children}

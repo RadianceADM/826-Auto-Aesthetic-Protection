@@ -73,7 +73,7 @@ export default function ServiceDetail() {
                         {service.image ? (
                             <Picture image={service.image} alt={service.name} sizes="(min-width: 1024px) 50vw, 100vw" eager className="aspect-[4/3] w-full object-cover" />
                         ) : (
-                            <CarCrop car={shot.car} focus={shot.focus} face={shot.face} aspect={4 / 3} frame={{ wide: '50vw', narrow: '100vw' }} alt={shot.alt} eager>
+                            <CarCrop car={shot.car} focus={shot.focus} face={shot.face} detail={shot.detail} aspect={4 / 3} frame={{ wide: '50vw', narrow: '100vw' }} alt={shot.alt} eager>
                                 {shot.gloss && <span aria-hidden="true" className="crop-gloss" />}
                             </CarCrop>
                         )}

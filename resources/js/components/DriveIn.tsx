@@ -224,6 +224,13 @@ export default function DriveIn({ car, face = 'right', spots }: Props) {
     };
 
     const ordered = spots.map((spot, index) => ({ ...spot, category: categories.find((category) => category.slug === spot.slug), from: 0.5 + index * 0.075 })).filter((spot) => spot.category);
+
+    // Wide screens: the names go in even columns from 10% before the car to 10% past it, left to right
+    // in the order their spots sit on screen; shift is how far each name sits from its spot, in % of the car's width
+    const onFloor = [...ordered]
+        .map((spot) => ({ ...spot, pin: face === 'right' ? spot.x : 1 - spot.x }))
+        .sort((a, b) => a.pin - b.pin)
+        .map((spot, index, all) => ({ ...spot, shift: (-0.1 + (1.2 * (index + 0.5)) / all.length - spot.pin) * 100 }));
     const shared = car
         ? {
               src: carFile(car.files[1000]),
@@ -317,22 +324,50 @@ export default function DriveIn({ car, face = 'right', spots }: Props) {
                             )}
                         </div>
 
-                        {/* Wide screens: each service points at the part it's for, its name on the floor below */}
+                        {/* Wide screens: each service points at the part it's for. The names sit in even columns on
+                            the floor below (wider than the car, so they never crowd), each joined to its spot by a
+                            thin line; cqw is a share of the car's width (.drive-car is the container) */}
                         <ul className="pointer-events-none absolute inset-0 z-[3] hidden lg:block">
-                            {ordered.map((spot) => (
+                            {onFloor.map((spot) => (
                                 <li
                                     key={spot.slug}
                                     data-beat
                                     data-focusable
                                     data-from={spot.from}
                                     className="absolute bottom-0"
-                                    style={{ left: `${(face === 'right' ? spot.x : 1 - spot.x) * 100}%`, top: `${spot.y * 100}%` }}
+                                    style={{ left: `${spot.pin * 100}%`, top: `${spot.y * 100}%` }}
                                 >
-                                    <span aria-hidden="true" className="absolute -top-[5px] -left-[5px] size-2.5 rounded-full border-2 border-[#2ad3cb] bg-[#08090b] shadow-[0_0_0_5px_rgb(42_211_203/0.16)]" />
-                                    <span aria-hidden="true" className="absolute top-2 left-0 h-[calc(100%+var(--drive-lead)-0.5rem)] w-px bg-gradient-to-b from-[#2ad3cb]/70 to-white/25" />
-                                    <Link to={`/services#${spot.slug}`} className="pointer-events-auto absolute top-[calc(100%+var(--drive-lead)+0.5rem)] left-0 block w-max max-w-[17rem] -translate-x-1/2 rounded-control px-2 py-1 text-center">
-                                        <span className="eyebrow block text-[0.7rem] text-white">{spot.category!.name}</span>
-                                        <span className="mt-1.5 block text-sm leading-snug text-[#b9c0c3]">{text.parts[spot.slug]}</span>
+                                    <span aria-hidden="true" className="absolute -top-[5px] -left-[5px] z-[1] size-2.5 rounded-full border-2 border-[#2ad3cb] bg-[#08090b] shadow-[0_0_0_5px_rgb(42_211_203/0.16)]" />
+                                    <svg
+                                        aria-hidden="true"
+                                        viewBox="0 0 100 100"
+                                        preserveAspectRatio="none"
+                                        className="absolute top-2 h-[calc(100%+var(--drive-lead))] overflow-visible"
+                                        style={{ left: `${Math.min(0, spot.shift)}cqw`, width: `max(1px, ${Math.abs(spot.shift)}cqw)` }}
+                                    >
+                                        <defs>
+                                            <linearGradient id={`lead-${spot.slug}`} gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="100">
+                                                <stop offset="0" stopColor="#2ad3cb" stopOpacity="0.75" />
+                                                <stop offset="1" stopColor="#ffffff" stopOpacity="0.22" />
+                                            </linearGradient>
+                                        </defs>
+                                        <line
+                                            x1={spot.shift < 0 ? 100 : 0}
+                                            y1="0"
+                                            x2={spot.shift < 0 ? 0 : 100}
+                                            y2="100"
+                                            stroke={`url(#lead-${spot.slug})`}
+                                            strokeWidth="1"
+                                            vectorEffect="non-scaling-stroke"
+                                        />
+                                    </svg>
+                                    <Link
+                                        to={`/services#${spot.slug}`}
+                                        className="pointer-events-auto absolute top-[calc(100%+var(--drive-lead)+0.75rem)] block w-max max-w-[29cqw] -translate-x-1/2 rounded-control px-2 py-1 text-center [text-wrap:balance]"
+                                        style={{ left: `${spot.shift}cqw` }}
+                                    >
+                                        <span className="eyebrow block text-[0.66rem] whitespace-nowrap text-white xl:text-[0.7rem]">{spot.category!.name}</span>
+                                        <span className="mt-1.5 block text-[0.8125rem] leading-snug text-[#b9c0c3] xl:text-sm">{text.parts[spot.slug]}</span>
                                     </Link>
                                 </li>
                             ))}

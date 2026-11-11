@@ -118,7 +118,7 @@ export default function Services() {
                                     )}
                                 </div>
                                 <div className="bay overflow-hidden rounded-card border border-line" style={{ '--horizon': '78%' } as CSSProperties}>
-                                    <CarCrop car={shot.car} focus={shot.focus} face={shot.face} aspect={3 / 2} frame={{ wide: '50vw', narrow: '100vw' }} alt={shot.alt}>
+                                    <CarCrop car={shot.car} focus={shot.focus} face={shot.face} detail={shot.detail} aspect={3 / 2} frame={{ wide: '50vw', narrow: '100vw' }} alt={shot.alt}>
                                         {shot.gloss && <span aria-hidden="true" className="crop-gloss" />}
                                     </CarCrop>
                                 </div>

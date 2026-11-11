@@ -621,6 +621,18 @@
     z-index: 2;
 }
 
+/* A close-up with its own sharper crop: the car's box (placed as the
+   whole file would be) holding just the part shown */
+.crop-detail {
+    position: absolute;
+    z-index: 2;
+}
+
+.crop-detail > img {
+    position: absolute;
+    max-width: none;
+}
+
 /* The floor's shadow along the bottom of a close-up: the car sits on something */
 .crop::after {
     content: '';
@@ -909,6 +921,8 @@
 }
 
 .drive-car {
+    /* The services' names under it are placed in shares of its width (cqw) */
+    container-type: inline-size;
     width: min(calc(100vw - 1.25rem), 40rem, calc((100svh - var(--nav-h)) * 0.62));
 }
 
@@ -951,7 +965,7 @@
     }
 
     .drive-copy {
-        top: calc(var(--horizon) + var(--drive-lead) + 5.25rem);
+        top: calc(var(--horizon) + var(--drive-lead) + 6.25rem);
     }
 }
 

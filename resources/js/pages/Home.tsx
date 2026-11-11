@@ -99,7 +99,7 @@ function ServicesSection() {
                     return (
                         <li key={category.id} className="panel flex flex-col overflow-hidden">
                             <Link to={`/services#${category.slug}`} tabIndex={-1} aria-hidden="true" className="bay block" style={{ '--horizon': '72%' } as CSSProperties}>
-                                <CarCrop car={shot.car} focus={shot.focus} face={shot.face} aspect={16 / 9} frame={{ wide: '46vw', narrow: '100vw', breakpoint: 768 }} alt={shot.alt}>
+                                <CarCrop car={shot.car} focus={shot.focus} face={shot.face} detail={shot.detail} aspect={16 / 9} frame={{ wide: '46vw', narrow: '100vw', breakpoint: 768 }} alt={shot.alt}>
                                     {shot.gloss && <span aria-hidden="true" className="crop-gloss" />}
                                 </CarCrop>
                             </Link>
