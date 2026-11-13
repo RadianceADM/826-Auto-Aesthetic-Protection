@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { Image } from '../types';
 
 type Props = {
@@ -11,6 +12,9 @@ type Props = {
 };
 
 export default function Picture({ image, alt, sizes = '100vw', className = '', width, height, eager = false }: Props) {
+    const [ready, setReady] = useState(false);
+
+    // A shimmer behind the photo until it's in, then it fades up over it
     return (
         <img
             src={image.src}
@@ -22,7 +26,14 @@ export default function Picture({ image, alt, sizes = '100vw', className = '', w
             loading={eager ? 'eager' : 'lazy'}
             fetchPriority={eager ? 'high' : undefined}
             decoding="async"
-            className={className}
+            ref={(element) => {
+                if (element?.complete && element.naturalWidth && !ready) {
+                    setReady(true);
+                }
+            }}
+            onLoad={() => setReady(true)}
+            data-loading={ready ? undefined : ''}
+            className={`photo-fade ${className}`}
         />
     );
 }

@@ -1086,3 +1086,90 @@
         transform: none;
     }
 }
+
+/* ---------------------------------------------------------- skeletons */
+
+/* Until a picture is in: a shimmer where a photo goes, a car-shaped glow
+   where a car goes; then the picture fades up over it instead of popping in */
+.skeleton {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    overflow: hidden;
+    background: var(--surface-3);
+}
+
+.skeleton::after,
+.photo-fade[data-loading] {
+    background-image: linear-gradient(100deg, transparent 20%, color-mix(in srgb, var(--text) 7%, transparent) 50%, transparent 80%);
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.5s ease-in-out infinite;
+}
+
+.skeleton::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+}
+
+.photo-fade[data-loading] {
+    background-color: var(--surface-3);
+}
+
+@keyframes skeleton-shimmer {
+    from {
+        background-position: 150% 0;
+    }
+
+    to {
+        background-position: -50% 0;
+    }
+}
+
+.car-skeleton {
+    position: absolute;
+    z-index: 0;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    pointer-events: none;
+}
+
+.skeleton-shape {
+    color: var(--surface-3);
+    animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes skeleton-pulse {
+    50% {
+        opacity: 0.45;
+    }
+}
+
+.parked-img,
+.crop img,
+.drive [data-body] .parked-img,
+.photo-fade {
+    transition: opacity 0.5s var(--ease-out);
+}
+
+[data-loading] > picture > .parked-img,
+[data-loading] > .parked-body .parked-img,
+.crop[data-loading] img,
+.photo-fade[data-loading] {
+    opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .skeleton::after,
+    .photo-fade[data-loading],
+    .skeleton-shape {
+        animation: none;
+    }
+
+    .parked-img,
+    .crop img,
+    .photo-fade {
+        transition: none;
+    }
+}

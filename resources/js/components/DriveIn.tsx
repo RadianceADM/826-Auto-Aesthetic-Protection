@@ -2,6 +2,7 @@ import { type CSSProperties, type FocusEvent, useLayoutEffect, useRef, useState 
 import { Link } from 'react-router-dom';
 
 import { avifOf, type Car, carAlt, carAvifSrcSet, carFile, carSrcSet, contactOf, type Facing } from '../lib/cars';
+import { CarSkeleton } from './Studio';
 import { copy } from '../lib/copy';
 import { categories } from '../lib/site';
 import Button from './Button';
@@ -291,7 +292,8 @@ export default function DriveIn({ car, face = 'right', spots }: Props) {
                                     {/* The car and its turning wheels, and the same again flipped in the floor's gloss */}
                                     {[false, true].map((reflected) => (
                                         <div key={String(reflected)} aria-hidden={reflected || undefined} className={reflected ? 'drive-reflection' : 'relative'}>
-                                            <div data-body className="relative origin-[18%_92%]">
+                                            <div data-body className="relative origin-[18%_92%]" data-loading={picked ? undefined : ''}>
+                                                {!reflected && !picked && <CarSkeleton car={car} />}
                                                 {reflected ? (
                                                     // The floor's copy reuses the file the car itself picked, so it's fetched once
                                                     picked && <img src={picked} width={car.width} height={car.height} decoding="async" alt="" className="parked-img" />

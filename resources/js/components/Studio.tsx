@@ -3,6 +3,15 @@ import { type CSSProperties, type ReactNode, useEffect, useRef, useState } from 
 import { avifOf, type Car, carAlt, carAvifSrcSet, carFile, carSrcSet, contactOf, type Detail, type Facing } from '../lib/cars';
 import VehicleSilhouette from './VehicleSilhouette';
 
+/** A car-shaped placeholder while the cutout loads: a tall body reads as an SUV, a long one as a sedan */
+export function CarSkeleton({ car, className = '' }: { car: Car; className?: string }) {
+    return (
+        <span aria-hidden="true" className={`car-skeleton ${className}`}>
+            <VehicleSilhouette name={car.width / car.height < 2.25 ? 'suv' : 'sedan'} className="skeleton-shape w-full [--silhouette-cut:transparent]" />
+        </span>
+    );
+}
+
 /* ------------------------------------------------------------- lights */
 
 type Bucket = { d: string; width: number; opacity: number };
@@ -257,9 +266,10 @@ export function ParkedCar({ car, face, sizes, eager = false, sweep = false, refl
     };
 
     return (
-        <div className={`parked ${className}`} style={vars}>
+        <div className={`parked ${className}`} style={vars} data-loading={loaded ? undefined : ''}>
             <div aria-hidden="true" className="parked-shadow" />
             <div className="parked-body" style={mirrored ? { transform: 'scaleX(-1)' } : undefined}>
+                {!loaded && <CarSkeleton car={car} />}
                 <picture className="contents">
                     <source type="image/avif" srcSet={carAvifSrcSet(car)} sizes={sizes} />
                     <img
@@ -308,6 +318,18 @@ type CropProps = {
  * panel for coating): the whole file, zoomed and placed in a frame.
  */
 export function CarCrop({ car, focus, aspect, face, frame, alt, eager = false, detail, className = '', children }: CropProps) {
+    const frameRef = useRef<HTMLDivElement>(null);
+    const [ready, setReady] = useState(false);
+
+    // Already in the cache: no load event comes
+    useEffect(() => {
+        const element = frameRef.current?.querySelector('img');
+
+        if (element?.complete && element.naturalWidth) {
+            setReady(true);
+        }
+    }, [car, detail]);
+
     if (!car) {
         return (
             <div className={`crop grid place-items-center text-steel/40 ${className}`} style={{ aspectRatio: aspect }}>
@@ -329,7 +351,8 @@ export function CarCrop({ car, focus, aspect, face, frame, alt, eager = false, d
     const loading = eager ? ('eager' as const) : ('lazy' as const);
 
     return (
-        <div className={`crop ${className}`} style={{ aspectRatio: aspect }}>
+        <div ref={frameRef} className={`crop ${className}`} style={{ aspectRatio: aspect }} data-loading={ready ? undefined : ''}>
+            {!ready && <span aria-hidden="true" className="skeleton" />}
             {detail ? (
                 // The car's box, placed as the whole file would be, holding only the sharp crop of the part shown
                 <div className="crop-detail" style={{ ...placed, aspectRatio: ratio }}>
@@ -349,6 +372,7 @@ export function CarCrop({ car, focus, aspect, face, frame, alt, eager = false, d
                         loading={loading}
                         fetchPriority={eager ? 'high' : undefined}
                         decoding="async"
+                        onLoad={() => setReady(true)}
                         style={{ left: `${detail.x * 100}%`, top: `${detail.y * 100}%`, width: `${detail.w * 100}%`, height: `${detail.h * 100}%` }}
                     />
                     </picture>
@@ -366,6 +390,7 @@ export function CarCrop({ car, focus, aspect, face, frame, alt, eager = false, d
                     loading={loading}
                     fetchPriority={eager ? 'high' : undefined}
                     decoding="async"
+                        onLoad={() => setReady(true)}
                     style={placed}
                 />
                 </picture>
